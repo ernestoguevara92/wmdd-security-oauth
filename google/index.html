@@ -24,6 +24,39 @@
 
              document.body.append(login_button);
          }
+         else {
+             // we have a code
+             console.log('got a code!!');
+
+             // Retrieve access token with custom api
+             var params = new URLSearchParams(location.search);
+             var code = params.get('code');
+
+             //document.body.append(code);
+
+             fetch(`https://rguevara.wmdd4950.com:8181?${code}`)
+                 .then(respond => {
+                     if (respond.status == 200) {
+                         return respond.json();
+                     } else {
+                         throw "Cannot get token";
+                     }
+                 })
+                 .then(json => {
+                     console.log(json);
+                     if (json.access_token) {
+                         tokenNode = document.createElement('div');
+                         tokenNode.innerHTML = json.access_token;
+                         document.body.append(tokenNode);
+                     } else {
+                         // we probably have an error
+                         tokenNode = document.createElement('pre');
+                         tokenNode.innerHTML = JSON.stringify(json, null, 4);
+                         document.body.append(tokenNode);
+                     }
+                 });
+
+         }
     </script>
 </body>
 </html>

@@ -10,8 +10,8 @@
         if (!document.location.href.includes('code')) {
              // this will redirect the page to google, then back
 
-             let client_id = 'your client id';
-             var login_url= [`https://www.facebook.com/v15.0/dialog/oauth?client_id=${client_id}`,
+             let client_id = '803363233678-1jjcoa52c3hb3vo6er77t0tk7ijiehep.apps.googleusercontent.com';
+             var login_url= [`https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}`,
                                       `redirect_uri=${document.location.href}`,
                                       `response_type=code`,
                                       `scope=userinfo.profile`].join('&') ;
@@ -39,20 +39,20 @@
                      if (respond.status == 200) {
                          return respond.json();
                      } else {
-                         throw "Cannot get token";
+                         throw "Cannot get user info";
                      }
                  })
                  .then(json => {
                      console.log(json);
-                     if (json.access_token) {
-                         tokenNode = document.createElement('div');
-                         tokenNode.innerHTML = json.access_token;
-                         document.body.append(tokenNode);
+                     if (json.data) {
+                         userInfo = document.createElement('div');
+                         userInfo.innerHTML = json.data;
+                         document.body.append(userInfo);
                      } else {
                          // we probably have an error
-                         tokenNode = document.createElement('pre');
-                         tokenNode.innerHTML = JSON.stringify(json, null, 4);
-                         document.body.append(tokenNode);
+                         userInfo = document.createElement('pre');
+                         userInfo.innerHTML = JSON.stringify(json, null, 4);
+                         document.body.append(userInfo);
                      }
                  });
 

@@ -14,7 +14,7 @@
              var login_url= [`https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}`,
                                       `redirect_uri=${document.location.href}`,
                                       `response_type=code`,
-                                      `scope=userinfo.profile`].join('&') ;
+                                      `scope=profile`].join('&') ;
 
              var login_button = document.createElement('button');
              login_button.innerHTML = 'Login to google';
@@ -31,10 +31,11 @@
              // Retrieve access token with custom api
              var params = new URLSearchParams(location.search);
              var code = params.get('code');
+             console.log('code: ', code);
 
              //document.body.append(code);
-
-             fetch(`https://rguevara.wmdd4950.com:8181?${code}`)
+            //https://rguevara.wmdd4950.com
+             fetch(`http://localhost:8181?code=${code}`)
                  .then(respond => {
                      if (respond.status == 200) {
                          return respond.json();
@@ -44,13 +45,15 @@
                  })
                  .then(json => {
                      console.log(json);
-                     if (json.data) {
-                         userInfo = document.createElement('div');
-                         userInfo.innerHTML = json.data;
-                         document.body.append(userInfo);
+                     if (json) {
+                         const name = document.createElement('h4');
+                         const picture = document.createElement('img');
+                            name.innerHTML = json.name;
+                            picture.src = json.picture;
+                         document.body.append(name, picture);
                      } else {
                          // we probably have an error
-                         userInfo = document.createElement('pre');
+                         const userInfo = document.createElement('pre');
                          userInfo.innerHTML = JSON.stringify(json, null, 4);
                          document.body.append(userInfo);
                      }

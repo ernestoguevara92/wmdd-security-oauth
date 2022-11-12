@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+    <head>
+        <style>
+        </style>
+    </head>
+    <body>
+
+        <script>
+         // if page doesn't include auth code, we need to authroize
+         if (!document.location.href.includes('code')) {
+             // this will redirect the page to facebook, then back
+
+             let client_id = 'your client id';
+             var login_url= [`https://www.facebook.com/v15.0/dialog/oauth?client_id=${client_id}`,
+                                      `redirect_uri=${document.location.href}`,
+                                      `response_type=code`,
+                                      `scope=email,public_profile`].join('&') ;
+
+             var login_button = document.createElement('button');
+             login_button.innerHTML = 'Login to facebook';
+             login_button.addEventListener('click', evt => {
+                 document.location.href = login_url;
+             });
+
+             document.body.append(login_button);
+         } else {
+             // we have a code
+             console.log('got a code!!');
+
+             // Retrieve access token with custom api
+             var params = new URLSearchParams(location.search);
+             var code = params.get('code');
+
+             //document.body.append(code);
+
+             fetch(`https://learn.operatoroverload.com/~jmadar/oauth/code.sh?${code}`)
+                 .then(respond => {
+                     if (respond.status == 200) {
+                         return respond.json();
+                     } else {
+                         throw "Cannot get token";
+                     }
+                 })
+                 .then(json => {
+                     console.log(json);
+                     if (json.access_token) {
+                         tokenNode = document.createElement('div');
+                         tokenNode.innerHTML = json.access_token;
+                         document.body.append(tokenNode);
+                     } else {
+                         // we probably have an error
+                         tokenNode = document.createElement('pre');
+                         tokenNode.innerHTML = JSON.stringify(json, null, 4);
+                         document.body.append(tokenNode);
+                     }
+                 });
+
+         }
+
+        </script>
+    </body>
+</html>

@@ -14,7 +14,7 @@
              var login_url= [`https://www.facebook.com/v15.0/dialog/oauth?client_id=${client_id}`,
                                       `redirect_uri=${document.location.href}`,
                                       `response_type=code`,
-                                      `scope=email,public_profile`].join('&') ;
+                                      `scope=userinfo.profile`].join('&') ;
 
              var login_button = document.createElement('button');
              login_button.innerHTML = 'Login to google';

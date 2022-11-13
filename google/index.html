@@ -33,9 +33,7 @@
              var code = params.get('code');
              console.log('code: ', code);
 
-             //document.body.append(code);
-            //https://rguevara.wmdd4950.com
-             fetch(`http://localhost:8181?code=${code}`)
+             fetch(`https://localhost:8181?code=${code}`)
                  .then(respond => {
                      if (respond.status == 200) {
                          return respond.json();
